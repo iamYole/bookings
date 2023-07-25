@@ -1,0 +1,45 @@
+{{template "base"  .}}
+
+{{define "content"}}
+<div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-3">Search for Availability</h1>
+
+                <form action="reservation.html" method="post" novalidate class="needs-validation">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                   
+                    <div class="row">
+                      <div class="col mt-3">
+                        <div class="row" id="check_in_dates">
+                          <div class="col">
+                            <label for="start">Check-in Date Date</label>
+                            <input required type="text" name="start" class="form-control" placeholder="Arrival Date" id="start">
+                          </div>                          
+                          <div class="col">
+                            <label for="end">Check-out Date</label>
+                            <input required type="text" name="end" class="form-control" placeholder="Depature Date" id="end">
+                          </div>
+                        </div>
+                      </div>                      
+                    </div>
+
+                    <hr>
+
+                    <button type="submit" class="btn btn-primary">Search Availability</button>
+
+                </form>
+        
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "js"}}
+  <script>
+    const elem = document.getElementById('check_in_dates');
+    const rangepicker = new DateRangePicker(elem, {
+              format: "dd-M-y",
+            });
+  </script>
+{{end}}
