@@ -196,7 +196,7 @@
                     title = "",
                   } = c;
 
-                  const { value: formValues } = await Swal.fire({
+                  const { value: result } = await Swal.fire({
                     title: title,
                     html: msg,
                     backdrop: true,
@@ -204,12 +204,9 @@
                     showCancelButton: true,
                     
                     willOpen: () => {
-                      const elem = document.getElementById("reservation-dates-model");
-                      const rp = new DateRangePicker(elem, {
-                        format: "dd-M-y",
-                        showOnFocus: true,
-                      })
-
+                        if (c.willOpen !== undefined){
+                          c.willOpen();
+                        }
                     },
 
                     preConfirm: () => {
@@ -220,13 +217,25 @@
                     },
 
                     didOpen: () => {
-                        document.getElementById('start-m').removeAttribute('disabled');
-                        document.getElementById('end-m').removeAttribute('disabled');
+                        if (c.didOpen !== undefined){
+                          c.didOpen();
+                        }
                     }
                   })
-
-                  if (formValues) {
-                    Swal.fire(JSON.stringify(formValues))
+                  if(result){
+                    if (result.dismiss !== Swal.DismissReason.cancel){
+                      if (result.value !== ""){
+                        if (c.callback !== undefined){
+                          c.callback(result);
+                        }
+                      }
+                      else{
+                        c.callback(false)
+                      }
+                    }
+                    else{
+                      c.callback(false)
+                    }
                   }
                 }
 

@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col">
                 <img src="/static/images/generals-quarters.png"
-                     class="img-fluid img-thumbnail mx-auto d-block room-image" alt="room image">
+                     class="img-fluid img-thumbnail mx-auto d-block w-100 room-image" alt="room image">
             </div>
         </div>
         <div class="row">
@@ -50,7 +50,43 @@
               </div>
             </form>
             `;
-            attention.custom({msg: html, title:"Choose your dates"});
+            attention.custom({
+                    msg: html, 
+                    title:"Choose your dates",
+
+                    willOpen: () => {
+                      const elem = document.getElementById("reservation-dates-model");
+                      const rp = new DateRangePicker(elem, {
+                            format: "dd-M-y",
+                            showOnFocus: true,
+                        })
+                    },
+
+                    didOpen: () => {
+                        document.getElementById('start-m').removeAttribute('disabled');
+                        document.getElementById('end-m').removeAttribute('disabled');
+                    },
+
+                    callback: function(result){
+                        console.log("Called");
+
+                        let form = document.getElementById("check_available_dates");
+                        let formData = new FormData(form);
+                        formData.append("csrf_token", "{{.CSRFToken}}")
+
+                        fetch('/search-availablity-json',{
+                                 method: "post",
+                                 body: formData,
+                        })
+                            .then(response => response.json)
+                            .then(data => {
+                                console.log(data);
+                                console.log(data.ok);
+                                console.log(data.message)
+                            })
+                    }
+                    
+            });
         })
     </script>
 {{end}}
